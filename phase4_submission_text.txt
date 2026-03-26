@@ -1,1 +1,5 @@
-In this phase, I prepared a deployable application for my fine tuned BART summarization model. I created a Streamlit interface that loads the saved model and tokenizer, accepts user text as input, and generates abstractive summaries with configurable decoding settings. I also prepared the deployment package with the required dependencies and Docker support so the application can be tested locally and deployed on a production style server.
+In this phase, I deployed my fine tuned BART summarization model through a Streamlit application. The project code and deployment files are stored in GitHub, the large model files are hosted in a Hugging Face model repository, and the live Streamlit application is deployed on Hugging Face Spaces. This structure was necessary because the model file exceeds GitHub's standard upload limit. The final system allows a user to input a long text and generate an abstractive summary through the deployed interface.
+
+GitHub repository: https://github.com/imenebna/Phase-4-deployment-package
+Model repository: https://huggingface.co/Imenebna/bart-phase4-model
+Live application: https://huggingface.co/spaces/Imenebna/bart-phase4-app
