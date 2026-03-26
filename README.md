@@ -1,40 +1,58 @@
-# Phase 4 Deployment Package for the Fine Tuned BART Model
+This repository contains the deployment package for my fine tuned BART summarization project.
 
-## What this package contains
-- `app.py` for the Streamlit inference app
-- `requirements.txt` for Python dependencies
-- `Dockerfile` for container deployment
-- `.streamlit/config.toml` for server configuration
 
-## Model files you must place inside `model/`
-Create a folder named `model` inside this package and put these files inside it:
-- `config.json`
-- `generation_config.json`
-- `model.safetensors`
-- `tokenizer.json`
-- `tokenizer_config.json`
-- `training_args.bin` if you want to keep the full project assets together
 
-## Local test
-```bash
-pip install -r requirements.txt
-streamlit run app.py
-```
+\## What is included here
 
-## Docker test
-```bash
-docker build -t bart-summarizer .
-docker run -p 8501:8501 bart-summarizer
-```
+This GitHub repository contains the application and deployment code:
 
-## Recommended deployment flow for this phase
-1. Put the final model files inside the `model/` folder.
-2. Test the app locally.
-3. Push the package to a Git repository.
-4. Deploy with Docker on a VM or cloud service that has enough memory for inference.
-5. Submit the running app link.
+\- `app.py`
 
-## Notes
-- The app loads the fine tuned model from local files and performs abstractive summarization.
-- The decoding parameters can be adjusted from the sidebar.
-- If the selected model folder is missing required files, the app stops and shows the missing items.
+\- `requirements.txt`
+
+\- `Dockerfile`
+
+\- `.streamlit/config.toml`
+
+\- deployment notes and submission text
+
+
+
+\## Deployment structure
+
+This project uses Streamlit as the application framework.
+
+
+
+Because the trained model file is very large, the project is split across three platforms:
+
+
+
+1\. \*\*GitHub\*\* for the application code and deployment files  
+
+&#x20;  https://github.com/imenebna/Phase-4-deployment-package
+
+
+
+2\. \*\*Hugging Face Model Hub\*\* for the fine tuned BART model files  
+
+&#x20;  https://huggingface.co/Imenebna/bart-phase4-model
+
+
+
+3\. \*\*Hugging Face Spaces\*\* for the live deployed Streamlit application  
+
+&#x20;  https://huggingface.co/spaces/Imenebna/bart-phase4-app
+
+
+
+\## Why the model is not stored in GitHub
+
+The file `model.safetensors` is about 1.55 GB, which exceeds GitHub's standard file size limit. For that reason, the code is stored in GitHub, while the trained model is hosted separately on Hugging Face Model Hub.
+
+
+
+\## Phase 4 objective
+
+In this phase, I deployed my fine tuned BART summarization model through a Streamlit application so a user can input a long text and receive an abstractive summary.
+
