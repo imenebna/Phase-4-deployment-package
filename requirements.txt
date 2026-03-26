@@ -1,0 +1,6 @@
+streamlit>=1.32,<2.0
+transformers>=4.38,<4.46
+torch>=2.2,<2.7
+sentencepiece>=0.1.99
+safetensors>=0.4.2
+accelerate>=0.27
