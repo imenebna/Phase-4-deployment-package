@@ -2,6 +2,14 @@ This repository contains the deployment package for my fine tuned BART summariza
 
 
 
+GitHub: https://github.com/imenebna/Phase-4-deployment-package
+
+Model repo: https://huggingface.co/Imenebna/bart-phase4-model
+
+Live app: https://huggingface.co/spaces/Imenebna/bart-phase4-app
+
+
+
 \## What is included here
 
 This GitHub repository contains the application and deployment code:
@@ -28,19 +36,19 @@ Because the trained model file is very large, the project is split across three 
 
 
 
-1\. \*\*GitHub\*\* for the application code and deployment files  
+1\. \*\*GitHub\*\* for the application code and deployment files
 
 &#x20;  https://github.com/imenebna/Phase-4-deployment-package
 
 
 
-2\. \*\*Hugging Face Model Hub\*\* for the fine tuned BART model files  
+2\. \*\*Hugging Face Model Hub\*\* for the fine tuned BART model files
 
 &#x20;  https://huggingface.co/Imenebna/bart-phase4-model
 
 
 
-3\. \*\*Hugging Face Spaces\*\* for the live deployed Streamlit application  
+3\. \*\*Hugging Face Spaces\*\* for the live deployed Streamlit application
 
 &#x20;  https://huggingface.co/spaces/Imenebna/bart-phase4-app
 
