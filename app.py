@@ -11,13 +11,17 @@ st.set_page_config(
     layout="wide",
 )
 
-DEFAULT_MODEL_DIR = os.getenv("MODEL_DIR", "./model")
+DEFAULT_MODEL_SOURCE = os.getenv("MODEL_SOURCE", "./model")
 REQUIRED_MODEL_FILES = [
     "config.json",
     "model.safetensors",
     "tokenizer.json",
     "tokenizer_config.json",
 ]
+
+
+def source_is_local(model_source: str) -> bool:
+    return Path(model_source).exists()
 
 
 def model_dir_is_ready(model_dir: str) -> tuple[bool, list[str]]:
@@ -27,9 +31,10 @@ def model_dir_is_ready(model_dir: str) -> tuple[bool, list[str]]:
 
 
 @st.cache_resource(show_spinner=True)
-def load_model_and_tokenizer(model_dir: str):
-    tokenizer = AutoTokenizer.from_pretrained(model_dir, local_files_only=True)
-    model = BartForConditionalGeneration.from_pretrained(model_dir, local_files_only=True)
+def load_model_and_tokenizer(model_source: str):
+    local_only = source_is_local(model_source)
+    tokenizer = AutoTokenizer.from_pretrained(model_source, local_files_only=local_only)
+    model = BartForConditionalGeneration.from_pretrained(model_source, local_files_only=local_only)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
     model.eval()
@@ -75,8 +80,10 @@ st.caption("Production style interface for abstractive text summarization with t
 
 with st.sidebar:
     st.header("Deployment settings")
-    st.write("This app loads a local fine tuned BART model and serves inference through Streamlit.")
-    model_dir = st.text_input("Model directory", value=DEFAULT_MODEL_DIR)
+    st.write(
+        "This app can load a local fine tuned BART model or a Hugging Face model repository and serve inference through Streamlit."
+    )
+    model_source = st.text_input("Model directory or Hugging Face repo", value=DEFAULT_MODEL_SOURCE)
 
     max_length = st.slider("Max summary length", min_value=30, max_value=180, value=60, step=5)
     min_length = st.slider("Min summary length", min_value=10, max_value=100, value=20, step=5)
@@ -91,18 +98,19 @@ with st.sidebar:
         "The app reuses the trained model assets from the earlier phases and exposes inference through a simple UI."
     )
 
-ready, missing_files = model_dir_is_ready(model_dir)
-if not ready:
-    st.error(
-        "The model directory is not ready. Place your final model files inside the selected folder.\n\n"
-        f"Missing files: {', '.join(missing_files)}"
-    )
-    st.stop()
+if source_is_local(model_source):
+    ready, missing_files = model_dir_is_ready(model_source)
+    if not ready:
+        st.error(
+            "The local model directory is not ready.\n\n"
+            f"Missing files: {', '.join(missing_files)}"
+        )
+        st.stop()
 
 try:
-    tokenizer, model, device = load_model_and_tokenizer(model_dir)
+    tokenizer, model, device = load_model_and_tokenizer(model_source)
 except Exception as exc:
-    st.error(f"The model could not be loaded from '{model_dir}'. Details: {exc}")
+    st.error(f"The model could not be loaded from '{model_source}'. Details: {exc}")
     st.stop()
 
 col1, col2 = st.columns([3, 1])
@@ -116,7 +124,7 @@ with col1:
 with col2:
     st.subheader("Runtime")
     st.write(f"Device: {device}")
-    st.write(f"Model path: {Path(model_dir).resolve()}")
+    st.write(f"Model source: {model_source}")
     st.write(f"Input words: {len(user_text.split()) if user_text else 0}")
 
 sample_text = (
@@ -163,6 +171,6 @@ if summarize_clicked:
 
 with st.expander("How to use this app"):
     st.write(
-        "1. Make sure the final model files are inside the local model folder. 2. Paste a news article or any long text. "
+        "1. Enter a local model folder or a Hugging Face model repository. 2. Paste a news article or any long text. "
         "3. Adjust the decoding parameters if needed. 4. Generate the summary and compare the output length with the input."
     )
